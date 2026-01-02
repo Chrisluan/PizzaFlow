@@ -1,23 +1,19 @@
 import { createContext, useState, type ReactNode } from "react";
 import type { Order } from "../../Types/OrderTypes";
-
-
-
-
 export type OrdersContextType = {
   orders: Array<Order>;
   addOrder: (order: Order) => void;
   updateOrder: (order: Order) => void;
   removeOrderById: (orderId: string) => void;
   clearOrders: () => void;
+  getOrderById: (orderId: string) => Order | undefined;
 };
+
+
 
 export const OrdersContext = createContext<OrdersContextType>(
   {} as OrdersContextType
 );
-
-
-
 
 
 type OrdersProviderProps = {
@@ -31,6 +27,9 @@ export function OrdersProvider({ children }: OrdersProviderProps) {
 
     setOrders((prev) => [...prev, order]);
     console.log(order)
+  }
+  function getOrderById(orderId: string) {
+    return orders.find((order) => order.id === orderId);
   }
 
   function updateOrder(updatedOrder: Order) {
@@ -54,9 +53,11 @@ export function OrdersProvider({ children }: OrdersProviderProps) {
       value={{
         orders,
         addOrder,
+        getOrderById,
         updateOrder,
         removeOrderById,
         clearOrders,
+
       }}
     >
       {children}
